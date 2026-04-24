@@ -17,6 +17,6 @@ def register(request):
             "user": serializer.data,
             "access": str(refresh.access_token),
             "refresh": str(refresh)
-        })
+        }, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=400)
