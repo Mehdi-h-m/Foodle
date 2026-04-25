@@ -10,3 +10,14 @@ class Like(models.Model):
 
     class Meta:
         unique_together = ("user", "meal_id") 
+
+User = get_user_model()
+
+class View(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    meal_id = models.CharField(max_length=50)
+    viewed_at = models.DateTimeField(auto_now=True)
+    view_count = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        unique_together = ("user", "meal_id")
