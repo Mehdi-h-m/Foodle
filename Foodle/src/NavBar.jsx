@@ -3,7 +3,8 @@ import { useState }from "react";
 import Home from "./Home.jsx";
 import Login from "./Login.jsx";
 import SignUp from "./Sign.jsx";
-import Discover from "./Discover.jsx";
+import Discover from "./FeedPage.jsx";
+import FeedPage from "./FeedPage.jsx";
 
 
 function NavBar() {
@@ -27,6 +28,7 @@ function NavBar() {
         <button><a onClick={()=>setPage("Discover")}>Discover</a></button>
         <button><a onClick={()=>setPage("Search")}>Search</a></button>
         <button><a onClick={()=>setPage("For You")}>For You</a></button>
+        <button><a onClick={()=>setPage("Liked")}>Liked</a></button>
      </ul>
           <button 
     className="btn btn-primary"
@@ -53,7 +55,7 @@ function NavBar() {
     </div> </>)}
 
 </nav> 
-    { Page === "Discover" ? (<><Discover /></>) : Page === "For You" ? (<><ForYou /></>) : Page === "Search" ? (<><Search /></>) : Page === "Login"? (<><Login Setpage={setPage} /></>) : Page === "Signup" ? (<><SignUp Setpage={setPage} /></>) : (<><Home/></>) }
+    { Page === "Discover" ? (<><FeedPage type="discover" /></>) : Page === "For You" ? (<><FeedPage type="fyp" /></>) : Page === "Search" ? (<><FeedPage type="search" /></>) : Page === "Liked" ? (<><FeedPage type="liked" /></>) : Page === "Login"? (<><Login Setpage={setPage} /></>) : Page === "Signup" ? (<><SignUp Setpage={setPage} /></>) : (<><Home/></>) }
 </>
 )
 }
