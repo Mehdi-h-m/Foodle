@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
-ALLOWED_HOSTS = ["foodle-back-end.onrender.com"]
+ALLOWED_HOSTS = ["*"]
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
