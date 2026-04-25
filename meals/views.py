@@ -4,12 +4,13 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import requests
 from .models import DisplayedMeal
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 
 # Create your views here.
+@permission_classes([IsAuthenticated])
 def Discover(request):
-        if not request.user.is_authenticated:
-            return JsonResponse({"error": "Unauthorized"}, status=401)
-
         user = request.user
         meals = []
         cutoff = timezone.now() - timedelta(days=1)
