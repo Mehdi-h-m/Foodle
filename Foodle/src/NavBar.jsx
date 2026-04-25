@@ -1,12 +1,18 @@
-import { useAuth } from "./AuthContext";
+import { useAuth} from "./AuthContext";
 import { useState }from "react";
 import Home from "./Home.jsx";
 import Login from "./Login.jsx";
 import SignUp from "./Sign.jsx";
+import Discover from "./Discover.jsx";
+
 
 function NavBar() {
-    const { user, logout } = useAuth();
-    const [Page, setPage] = useState("Home");
+
+  
+  const [Page, setPage] = useState("Home");
+  const { user, logout } = useAuth();
+
+
 
   return (
     <>
@@ -18,10 +24,16 @@ function NavBar() {
   {user ? (
     <>
     <ul class="nav-links">
-            <li><a href="#discover">Discover</a></li>
-        <li><a href="#for-you">For You</a></li>
-        <li><a href="#recipe">Search</a></li>
-    </ul>
+        <button><a onClick={()=>setPage("Discover")}>Discover</a></button>
+        <button><a onClick={()=>setPage("Search")}>Search</a></button>
+        <button><a onClick={()=>setPage("For You")}>For You</a></button>
+     </ul>
+          <button 
+    className="btn btn-primary"
+    onClick={() => logout()}
+  >
+    Logout
+  </button>
     </>) : (
         <> 
     <div class="nav-cta">
@@ -41,9 +53,9 @@ function NavBar() {
     </div> </>)}
 
 </nav> 
-    { Page === "Discover" ? (<></>) : Page === "For You" ? (<></>) : Page === "Search" ? (<></>) : Page === "Login"? (<><Login/></>) : Page === "Signup" ? (<><SignUp/></>) : (<><Home/></>) }
+    { Page === "Discover" ? (<><Discover /></>) : Page === "For You" ? (<><ForYou /></>) : Page === "Search" ? (<><Search /></>) : Page === "Login"? (<><Login Setpage={setPage} /></>) : Page === "Signup" ? (<><SignUp Setpage={setPage} /></>) : (<><Home/></>) }
 </>
 )
 }
 
-export default NavBar
+export default NavBar;
