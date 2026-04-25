@@ -1,12 +1,44 @@
+import { useEffect, useState } from "react";
+
+function Card({ category, title, image }) {
+  return (
+    <div className="d-card fade-up">
+      <div className="d-card-img">
+        <img src={image} alt={title} />
+      </div>
+
+      <div className="d-card-body">
+        <div className="d-card-cat">{category}</div>
+        <div className="d-card-title">{title}</div>
+      </div>
+    </div>
+  );
+}
 
 
 function Discover() {
-  return (
-    <div class="discover">
-      <h2>Discover New Recipes</h2>
-      <p>Explore a world of culinary possibilities with Foodle's Discover feature. Whether you're looking for quick weeknight dinners, healthy meal ideas, or indulgent desserts, our curated collection of recipes has something for everyone. Browse through trending dishes, seasonal favorites, and chef's picks to find your next favorite meal. With easy-to-follow instructions and vibrant photos, discovering new recipes has never been more enjoyable.</p>
-    </div>
-  )
-}
+  const [items, setItems] = useState([]);
 
+  useEffect(() => {
+    fetch("https://foodle-back-end.onrender.com/meals/Discover/")
+      .then((res) => res.json())
+      .then((data) => setItems(data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  return (
+    <section className="discover" id="discover">
+      <div className="discover-grid">
+        {items.map((item, index) => (
+          <Card
+            key={index}
+            title={item.title}
+            category={item.category}
+            image={item.image}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
 export default Discover
