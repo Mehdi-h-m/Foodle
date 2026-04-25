@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
+ALLOWED_HOSTS = ["foodle-back-end.onrender.com"]
+
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
