@@ -7,6 +7,7 @@ from .models import DisplayedMeal
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.core.paginator import Paginator
 
 
 BASE_URL = "https://www.themealdb.com/api/json/v1/1"
@@ -16,12 +17,12 @@ BASE_URL = "https://www.themealdb.com/api/json/v1/1"
 def Discover(request):
         user = request.user
         meals = []
-        cutoff = timezone.now() - timedelta(days=1)
+        cutoff = timezone.now() - timedelta(days=3)
 
         attempts = 0
         MAX_ATTEMPTS = 50 
 
-        while len(meals) < 25 and attempts < MAX_ATTEMPTS:
+        while len(meals) < 20 and attempts < MAX_ATTEMPTS:
             attempts += 1
 
             response = requests.get(f"{BASE_URL}/random.php")
@@ -55,10 +56,10 @@ def search_meals(request):
     category = request.GET.get("category")
     area = request.GET.get("area")
     ingredient = request.GET.get("ingredient")
+    page_number = int(request.GET.get("page", 1))
 
     meals = []
 
-    # 🔹 1. Start with base fetch
     if query:
         res = requests.get(f"{BASE_URL}/search.php?s={query}")
         meals = res.json().get("meals") or []
@@ -76,7 +77,6 @@ def search_meals(request):
         res = requests.get(f"{BASE_URL}/search.php?s=")
         meals = res.json().get("meals") or []
 
-    # 🔥 2. Apply additional filters manually
 
     def matches(meal):
         if category and meal.get("strCategory") != category:
@@ -89,7 +89,7 @@ def search_meals(request):
 
     filtered_meals = [meal for meal in meals if matches(meal)]
 
-    # 🔥 3. Normalize response (important for frontend)
+
     formatted = [
         {
             "id": meal["idMeal"],
@@ -99,4 +99,12 @@ def search_meals(request):
         for meal in filtered_meals
     ]
 
-    return Response(formatted[:25])
+    paginator = Paginator(formatted, 20)
+    page = paginator.get_page(page_number)
+
+    return Response({
+        "results": list(page),
+        "page": page.number,
+        "total_pages": paginator.num_pages,
+        "has_next": page.has_next(),
+    })
