@@ -17,7 +17,7 @@ function Login({ Setpage }){
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: email,
+        username: fullName,
         password: password,
       }),
     });

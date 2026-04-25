@@ -3,6 +3,7 @@ import { useState }from "react";
 import Home from "./Home.jsx";
 import Login from "./Login.jsx";
 import SignUp from "./Sign.jsx";
+import Discover from "./Discover.jsx";
 
 
 function NavBar() {
@@ -23,9 +24,9 @@ function NavBar() {
   {user ? (
     <>
     <ul class="nav-links">
-            <li><a href="#discover">Discover</a></li>
-        <li><a href="#for-you">For You</a></li>
-        <li><a href="#recipe">Search</a></li>
+        <button><a onClick={()=>setPage("Discover")}>Discover</a></button>
+        <button><a onClick={()=>setPage("Search")}>Search</a></button>
+        <button><a onClick={()=>setPage("For You")}>For You</a></button>
      </ul>
           <button 
     className="btn btn-primary"
@@ -52,7 +53,7 @@ function NavBar() {
     </div> </>)}
 
 </nav> 
-    { Page === "Discover" ? (<></>) : Page === "For You" ? (<></>) : Page === "Search" ? (<></>) : Page === "Login"? (<><Login/></>) : Page === "Signup" ? (<><SignUp Setpage={setPage} /></>) : (<><Home/></>) }
+    { Page === "Discover" ? (<><Discover /></>) : Page === "For You" ? (<><ForYou /></>) : Page === "Search" ? (<><Search /></>) : Page === "Login"? (<><Login Setpage={setPage} /></>) : Page === "Signup" ? (<><SignUp Setpage={setPage} /></>) : (<><Home/></>) }
 </>
 )
 }
