@@ -27,10 +27,10 @@ def register(request):
 
 @api_view(["POST"])
 def login(request):
-    email = request.data.get("email")
+    username = request.data.get("username")
     password = request.data.get("password")
 
-    user = authenticate(username=email, password=password)
+    user = authenticate(username=username, password=password)
 
     if user is not None:
         refresh = RefreshToken.for_user(user)
