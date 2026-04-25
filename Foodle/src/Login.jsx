@@ -1,8 +1,41 @@
+import { useState } from "react";
+import { useAuth } from "./AuthContext.jsx"
 
-function Login(){
+
+
+
+function Login({ Setpage }){
+  const { login } = useAuth();
+  const [fullName, setFullName] = useState("");
+  const [password, setPassword] = useState("");
+
+    const handleLogin = async () => {
+  try {
+    const response = await fetch("https://foodle-back-end.onrender.com/users/login/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    });
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("User logged in:", data);
+      login(data);
+      Setpage("Home");
+    } else {
+      console.error("Error:", data);
+    }
+  } catch (error) {
+    console.error("Network error:", error);
+  }
+};
 return(
         <>
-        {console.log("Login")}
     <section class="auth-section" id="auth">
     <div class="auth-wrapper">
         <div class="auth-copy fade-up">
@@ -22,17 +55,21 @@ return(
             <h1 id="tab-login">Logging In</h1>
         </div>
 
+      <div id="register-fields">
         <div class="form-group">
-            <label class="form-label">Email</label>
-            <input class="form-input" type="email" placeholder="hello@foodle.com"/>
+          <label class="form-label">UserName</label>
+          <input class="form-input" type="text" placeholder="Jamie Oliver" value={fullName} onChange={(e) => setFullName(e.target.value)}/>
         </div>
+      </div>
 
         <div class="form-group">
             <label class="form-label">Password</label>
-            <input class="form-input" type="password" placeholder="••••••••"/>
+            <input class="form-input" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)}/>
         </div>
 
-        <button class="form-submit" id="form-btn">Log In</button>
+        <button class="form-submit" id="form-btn" onClick={handleLogin}>
+            Log In
+        </button>
 
         </div>
     </div>

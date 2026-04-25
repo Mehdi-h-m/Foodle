@@ -4,7 +4,7 @@ import { useAuth } from "./AuthContext.jsx"
 
 function SignUp({ Setpage }){
   const { login } = useAuth();
-      const [fullName, setFullName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -59,7 +59,7 @@ return(
 
       <div id="register-fields">
         <div class="form-group">
-          <label class="form-label">Full Name</label>
+          <label class="form-label">UserName</label>
           <input class="form-input" type="text" placeholder="Jamie Oliver" value={fullName} onChange={(e) => setFullName(e.target.value)}/>
         </div>
       </div>
