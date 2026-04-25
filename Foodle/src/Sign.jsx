@@ -1,16 +1,17 @@
 import { useState } from "react";
+import { useAuth } from "./AuthContext.jsx"
 
 
-
-function SignUp(){
-
+function SignUp({ Setpage }){
+  const { login } = useAuth();
       const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
     const handleSubmit = async () => {
   try {
-    const response = await fetch("http://localhost:8000/api/register/", {
+    console.log("Here")
+    const response = await fetch("https://foodle-back-end.onrender.com/users/register/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,12 +22,12 @@ function SignUp(){
         password: password,
       }),
     });
-
     const data = await response.json();
 
     if (response.ok) {
       console.log("User created:", data);
-      setPage("Login"); // redirect to login
+      login(data);
+      Setpage("Home");
     } else {
       console.error("Error:", data);
     }

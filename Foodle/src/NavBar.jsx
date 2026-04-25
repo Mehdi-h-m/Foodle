@@ -1,12 +1,17 @@
-import { useAuth } from "./AuthContext";
+import { useAuth} from "./AuthContext";
 import { useState }from "react";
 import Home from "./Home.jsx";
 import Login from "./Login.jsx";
 import SignUp from "./Sign.jsx";
 
+
 function NavBar() {
-    const { user, logout } = useAuth();
-    const [Page, setPage] = useState("Home");
+
+  
+  const [Page, setPage] = useState("Home");
+  const { user, logout } = useAuth();
+
+
 
   return (
     <>
@@ -21,7 +26,13 @@ function NavBar() {
             <li><a href="#discover">Discover</a></li>
         <li><a href="#for-you">For You</a></li>
         <li><a href="#recipe">Search</a></li>
-    </ul>
+     </ul>
+          <button 
+    className="btn btn-primary"
+    onClick={() => logout()}
+  >
+    Logout
+  </button>
     </>) : (
         <> 
     <div class="nav-cta">
@@ -41,9 +52,9 @@ function NavBar() {
     </div> </>)}
 
 </nav> 
-    { Page === "Discover" ? (<></>) : Page === "For You" ? (<></>) : Page === "Search" ? (<></>) : Page === "Login"? (<><Login/></>) : Page === "Signup" ? (<><SignUp/></>) : (<><Home/></>) }
+    { Page === "Discover" ? (<></>) : Page === "For You" ? (<></>) : Page === "Search" ? (<></>) : Page === "Login"? (<><Login/></>) : Page === "Signup" ? (<><SignUp Setpage={setPage} /></>) : (<><Home/></>) }
 </>
 )
 }
 
-export default NavBar
+export default NavBar;
