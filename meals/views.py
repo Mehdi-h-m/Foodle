@@ -11,6 +11,8 @@ from django.core.paginator import Paginator
 import random
 from interactions.models import Like, View
 from collections import defaultdict
+from django.core.cache import cache
+import httpx
 
 BASE_URL = "https://www.themealdb.com/api/json/v1/1"
 
@@ -111,10 +113,61 @@ def search_meals(request):
         "has_next": page.has_next(),
     })
 
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+async def get_meal_detail(request, meal_id):
+    cache_key = f"meal_detail:{meal_id}"
+
+    cached = cache.get(cache_key)
+    if cached:
+        return Response(cached)
+
+    async with httpx.AsyncClient(timeout=10) as client:
+        res = await client.get(f"{BASE_URL}/lookup.php?i={meal_id}")
+        data = res.json().get("meals")
+
+    if not data:
+        return Response({"error": "Meal not found"}, status=404)
+
+    meal = data[0]
+
+    ingredients = []
+    for i in range(1, 21):
+        ing = meal.get(f"strIngredient{i}")
+        measure = meal.get(f"strMeasure{i}")
+
+        if ing and ing.strip():
+            ingredients.append({
+                "name": ing,
+                "measure": measure
+            })
+
+    formatted = {
+        "id": meal["idMeal"],
+        "title": meal["strMeal"],
+        "category": meal.get("strCategory"),
+        "area": meal.get("strArea"),
+        "instructions": meal.get("strInstructions"),
+        "image": meal.get("strMealThumb"),
+        "youtube": meal.get("strYoutube"),
+        "ingredients": ingredients,
+    }
+
+    cache.set(cache_key, formatted, timeout=60 * 60 * 24)  # 24h
+
+    return Response(formatted)
+
+
+
+
+
+
+
 def get_random_meals(limit=15):
     meals = []
 
-    # TheMealDB random endpoint (single meal per call)
     for _ in range(limit):
         res = requests.get(f"{BASE_URL}/random.php")
         data = res.json().get("meals")
