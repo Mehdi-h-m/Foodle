@@ -1,10 +1,10 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Like
+from .models import Like , View
 from django.core.paginator import Paginator
 import requests
-
+from django.utils.timezone import now
 
 BASE_URL = "https://www.themealdb.com/api/json/v1/1"
 
@@ -59,4 +59,29 @@ def liked_meals(request):
         "page": page.number,
         "total_pages": paginator.num_pages,
         "has_next": page.has_next(),
+    })
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def track_view(request):
+    user = request.user
+    meal_id = request.data.get("meal_id")
+
+    if not meal_id:
+        return Response({"error": "meal_id required"}, status=400)
+
+    view, created = View.objects.get_or_create(
+        user=user,
+        meal_id=meal_id,
+    )
+
+    if not created:
+        view.view_count += 1
+        view.viewed_at = now()
+        view.save()
+
+    return Response({
+        "status": "tracked",
+        "view_count": view.view_count
     })
