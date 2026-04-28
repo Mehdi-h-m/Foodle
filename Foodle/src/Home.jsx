@@ -1,21 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useAuth} from "./AuthContext";
 
-function Home() {
+
+export default function Home({ setPage }) {
+   const { user, logout } = useAuth();
   return (
-    <>
-    <div className="">
-        <div className="">
-            <h1>Discover Your Next Meal</h1>
-            <p>Foodle is your personal meal discovery app, designed to help you find delicious recipes tailored to your tastes and dietary preferences. Whether you're looking for quick weeknight dinners, healthy lunches, or indulgent desserts, Foodle has you covered.</p>
-            <a href="#auth" className="">Get Started</a>
-        </div>
-    </div>
-    </>
-  )
-}
+    <section className="home-section">
 
-export default Home
+      <h1 className="home-title">
+        Discover recipes<br />
+        made for <em>you</em>
+      </h1>
+
+      <p className="home-sub">
+        Foodle brings together thousands of recipes from around the world
+        and tailors them to your taste — so you always know what to cook next.
+      </p>
+
+      <div className="home-stats">
+        {[
+          ["40 000+", "Recipes"],
+          ["180+",    "Cuisines"],
+          ["1.2 M",   "Cooks"],
+        ].map(([n, l]) => (
+          <div key={l}>
+            <div className="home-stat-number">{n}</div>
+            <div className="home-stat-label">{l}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="home-divider" />
+  {user ? (<></>) : (<>
+      <div className="home-actions">
+        <button className="btn btn-ghost" onClick={() => setPage("Login")}>Log In</button>
+        <button className="btn btn-primary" onClick={() => setPage("Signup")}>Sign Up</button>
+      </div>
+      </>)}
+    </section>
+  );
+}

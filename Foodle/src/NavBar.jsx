@@ -3,7 +3,7 @@ import { useState }from "react";
 import Home from "./Home.jsx";
 import Login from "./Login.jsx";
 import SignUp from "./Sign.jsx";
-import Discover from "./FeedPage.jsx";
+import Discover from "./Discover.jsx";
 import FeedPage from "./FeedPage.jsx";
 
 
@@ -55,7 +55,7 @@ function NavBar() {
     </div> </>)}
 
 </nav> 
-    { Page === "Discover" ? (<><FeedPage type="discover" /></>) : Page === "For You" ? (<><FeedPage type="fyp" /></>) : Page === "Search" ? (<><FeedPage type="search" /></>) : Page === "Liked" ? (<><FeedPage type="liked" /></>) : Page === "Login"? (<><Login Setpage={setPage} /></>) : Page === "Signup" ? (<><SignUp Setpage={setPage} /></>) : (<><Home/></>) }
+    { Page === "Discover" ? (<><Discover /></>) : Page === "For You" ? (<><FeedPage type="fyp" /></>) : Page === "Search" ? (<><FeedPage type="search" /></>) : Page === "Liked" ? (<><FeedPage type="liked" /></>) : Page === "Login"? (<><Login Setpage={setPage} /></>) : Page === "Signup" ? (<><SignUp Setpage={setPage} /></>) : (<Home setPage={setPage} />) }
 </>
 )
 }
