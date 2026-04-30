@@ -13,6 +13,7 @@ from interactions.models import Like, View
 from collections import defaultdict
 from django.core.cache import cache
 import httpx
+from django.utils.timezone import now
 
 BASE_URL = "https://www.themealdb.com/api/json/v1/1"
 
