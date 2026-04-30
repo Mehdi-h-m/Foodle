@@ -2,16 +2,10 @@ import { useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
 import "./RecipeDetail.css";
 
-function getIngredients(meal) {
-  const ingredients = [];
-  for (let i = 1; i <= 20; i++) {
-    const name    = meal[`strIngredient${i}`];
-    const measure = meal[`strMeasure${i}`];
-    if (name && name.trim()) {
-      ingredients.push({ name: name.trim(), measure: measure ? measure.trim() : "" });
-    }
-  }
-  return ingredients;
+function getYoutubeEmbed(url) {
+  if (!url) return null;
+  const match = url.match(/(?:v=|youtu\.be\/)([^&?/]+)/);
+  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
 }
 
 function getSteps(instructions) {
@@ -22,13 +16,8 @@ function getSteps(instructions) {
     .filter(Boolean);
 }
 
-function getYoutubeEmbed(url) {
-  if (!url) return null;
-  const match = url.match(/(?:v=|youtu\.be\/)([^&?/]+)/);
-  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
-}
-
 export default function RecipeDetail({ mealId, onBack }) {
+  const [liked, setLiked] = useState(false);
   const { accessToken } = useAuth();
   const [meal, setMeal]       = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,7 +39,21 @@ export default function RecipeDetail({ mealId, onBack }) {
         if (!res.ok) throw new Error();
         return res.json();
       })
-      .then(data => { setMeal(data); setLoading(false); })
+      .then(data => {
+  setMeal(data);
+  setLiked(data.liked ?? false); 
+  setLoading(false);
+
+  // Auto-track view
+  fetch("https://foodle-back-end.onrender.com/interactions/view/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ meal_id: mealId }),
+  });
+})
       .catch(() => { setError(true); setLoading(false); });
   }, [mealId, accessToken]);
 
@@ -58,59 +61,61 @@ export default function RecipeDetail({ mealId, onBack }) {
   if (error)   return <div className="recipe-status">Something went wrong. Please try again.</div>;
   if (!meal)   return null;
 
-  const ingredients  = getIngredients(meal);
-  const steps        = getSteps(meal.strInstructions);
-  const embedUrl     = getYoutubeEmbed(meal.strYoutube);
+  const steps    = getSteps(meal.instructions);
+  const embedUrl = getYoutubeEmbed(meal.youtube);
+
+  function toggleLike() {
+  fetch("https://foodle-back-end.onrender.com/interactions/like/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ meal_id: mealId }),
+  })
+    .then(res => res.json())
+    .then(data => setLiked(data.liked))
+    .catch(err => console.error(err));
+}
 
   return (
     <section className="recipe-section">
 
-      {/* Back button */}
       <button className="recipe-back" onClick={onBack}>
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M10 12L6 8l4-4" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        Back to Discover
+        Back
       </button>
 
       {/* Hero */}
       <div className="recipe-hero">
-        <img
-          className="recipe-hero-img"
-          src={meal.strMealThumb}
-          alt={meal.strMeal}
-        />
+        <img className="recipe-hero-img" src={meal.image} alt={meal.title} />
 
         <div className="recipe-hero-info">
           <div className="recipe-badge">
-            <span className="recipe-cat">{meal.strCategory}</span>
+            <span className="recipe-cat">{meal.category}</span>
             <span className="recipe-dot" />
-            <span className="recipe-area">{meal.strArea}</span>
+            <span className="recipe-area">{meal.area}</span>
           </div>
-
-          <h1 className="recipe-title">{meal.strMeal}</h1>
-
-          {meal.strSource && (
-            <a
-              className="recipe-source-link"
-              href={meal.strSource}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View original recipe
-            </a>
-          )}
+          <h1 className="recipe-title">{meal.title}</h1>
+          <button
+          className={`like-btn${liked ? " liked" : ""}`}
+          onClick={toggleLike}
+        >
+          {liked ? "♥" : "♡"} {liked ? "Liked" : "Like"}
+        </button>
         </div>
       </div>
 
       {/* Body */}
       <div className="recipe-body">
 
-        {/* Ingredients sidebar */}
+        {/* Ingredients */}
         <aside className="recipe-card">
           <h2 className="recipe-card-title">Ingredients</h2>
           <ul className="ingredient-list">
-            {ingredients.map((ing, i) => (
+            {meal.ingredients.map((ing, i) => (
               <li key={i} className="ingredient-item">
                 <span className="ingredient-name">{ing.name}</span>
                 {ing.measure && (
@@ -124,7 +129,7 @@ export default function RecipeDetail({ mealId, onBack }) {
         {/* Right column */}
         <div className="recipe-right">
 
-          {/* Steps */}
+          {/* Instructions */}
           <div>
             <h2 className="recipe-section-title">Instructions</h2>
             <ol className="steps-list">
@@ -144,7 +149,7 @@ export default function RecipeDetail({ mealId, onBack }) {
               <div className="recipe-video">
                 <iframe
                   src={embedUrl}
-                  title={meal.strMeal}
+                  title={meal.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />

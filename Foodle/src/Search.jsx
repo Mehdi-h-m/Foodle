@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "./AuthContext";
 import "./Search.css";
-
+import RecipeDetail from "./RecipeDetail.jsx";
 const EMPTY_FILTERS = { q: "", category: "", area: "", ingredient: "" };
 
 const CATEGORIES = ["Beef","Breakfast","Chicken","Dessert","Goat","Lamb","Miscellaneous","Pasta","Pork","Seafood","Side","Starter","Vegan","Vegetarian"];
@@ -12,7 +12,7 @@ const INGREDIENTS = ["Chicken","Salmon","Beef","Pork","Avocado","Apple Cider Vin
 
 function Card({ item, onClick }) {
   return (
-    <div className="d-card" onClick={() => onClick(item.id)}>
+    <div className="d-card">
       <img className="d-card-img" src={item.image} alt={item.title} />
       <div className="d-card-body">
         <div className="d-card-cat">{item.category}</div>
@@ -25,6 +25,7 @@ function Card({ item, onClick }) {
 }
 
 export default function Search({ onSelectMeal }) {
+  const [selectedId, setSelectedId] = useState(null);
   const fields = [
   { key: "q",          label: "Recipe name", placeholder: "e.g. Gazpacho",    type: "text",   options: null        },
   { key: "category",   label: "Category",    placeholder: "All categories",   type: "select", options: CATEGORIES  },
@@ -108,6 +109,11 @@ export default function Search({ onSelectMeal }) {
     if (e.key === "Enter") handleSearch();
   }
 
+     if (selectedId) {
+      console.log("Selected meal ID:", selectedId);
+      return <RecipeDetail mealId={selectedId} onBack={() => setSelectedId(null)} />;
+    }
+  
   return (
     <section className="search-section">
 
@@ -166,7 +172,9 @@ export default function Search({ onSelectMeal }) {
               <p className="search-status">No recipes found. Try different filters.</p>
             )}
             {!loading && !error && items.map((item, i) => (
-              <Card key={item.idMeal ?? i} item={item} onClick={onSelectMeal} />
+              <div onClick={() => setSelectedId(item.id)}>
+              <Card key={item.idMeal ?? i} item={item}/>
+              </div>
             ))}
           </div>
 
