@@ -5,6 +5,7 @@ import Login from "./Login.jsx";
 import SignUp from "./Sign.jsx";
 import Discover from "./Discover.jsx";
 import FeedPage from "./FeedPage.jsx";
+import Search from "./Search.jsx";
 
 
 function NavBar() {
@@ -55,7 +56,7 @@ function NavBar() {
     </div> </>)}
 
 </nav> 
-    { Page === "Discover" ? (<><Discover /></>) : Page === "For You" ? (<><FeedPage type="fyp" /></>) : Page === "Search" ? (<><FeedPage type="search" /></>) : Page === "Liked" ? (<><FeedPage type="liked" /></>) : Page === "Login"? (<><Login Setpage={setPage} /></>) : Page === "Signup" ? (<><SignUp Setpage={setPage} /></>) : (<Home setPage={setPage} />) }
+    { Page === "Discover" ? (<><Discover /></>) : Page === "For You" ? (<><FeedPage type="fyp" /></>) : Page === "Search" ? (<><Search /></>) : Page === "Liked" ? (<><FeedPage type="liked" /></>) : Page === "Login"? (<><Login Setpage={setPage} /></>) : Page === "Signup" ? (<><SignUp Setpage={setPage} /></>) : (<Home setPage={setPage} />) }
 </>
 )
 }

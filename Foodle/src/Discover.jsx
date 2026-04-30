@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
+import RecipeDetail from "./RecipeDetail.jsx";
 
 function Card({id, category, title, image }) {
-  console.log(id, category, title, image);
+
+
   return (
     <div className="d-card">
       <img className="d-card-img" src={image} alt={title} />
@@ -15,15 +17,21 @@ function Card({id, category, title, image }) {
 }
 
 export default function Discover() {
+
+    const [selectedId, setSelectedId] = useState(null);
   const { accessToken } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+
   useEffect(() => {
     if (!accessToken) return;
 
     setLoading(true);
     setError(false);
+
+
     fetch("https://foodle-back-end.onrender.com/meals/Discover/", {
       headers: {
         "Content-Type": "application/json",
@@ -35,6 +43,7 @@ export default function Discover() {
         return res.json();
       })
       .then((data) => {
+        console.log(data);
         setItems(data.meals);
         setLoading(false);
       })
@@ -43,6 +52,12 @@ export default function Discover() {
         setLoading(false);
       });
   }, [accessToken]);
+
+
+
+    if (selectedId) {
+    return <RecipeDetail mealId={selectedId} onBack={() => setSelectedId(null)} />;
+  }
 
   return (
     <section className="discover-section">
@@ -59,12 +74,14 @@ export default function Discover() {
           <p className="discover-status">No recipes found.</p>
         )}
         {!loading && !error && items.map((item, index) => (
+          <div onClick={() => setSelectedId(item.idMeal)}>
           <Card
             id={item.idMeal}
             title={item.strMeal}
             category={item.strCategory}
             image={item.strMealThumb}
-          />
+          /> </div>
+          
         ))}
       </div>
     </section>
