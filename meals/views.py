@@ -117,15 +117,15 @@ def search_meals(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-async def get_meal_detail(request, meal_id):
+def get_meal_detail(request, meal_id):
     cache_key = f"meal_detail:{meal_id}"
 
     cached = cache.get(cache_key)
     if cached:
         return Response(cached)
 
-    async with httpx.AsyncClient(timeout=10) as client:
-        res = await client.get(f"{BASE_URL}/lookup.php?i={meal_id}")
+    with httpx.Client(timeout=10) as client:
+        res = client.get(f"{BASE_URL}/lookup.php?i={meal_id}")
         data = res.json().get("meals")
 
     if not data:
@@ -155,10 +155,9 @@ async def get_meal_detail(request, meal_id):
         "ingredients": ingredients,
     }
 
-    cache.set(cache_key, formatted, timeout=60 * 60 * 24)  # 24h
+    cache.set(cache_key, formatted, timeout=60 * 60 * 24)
 
     return Response(formatted)
-
 
 
 
