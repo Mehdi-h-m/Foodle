@@ -305,7 +305,11 @@ def fyp(request):
             score += 2
 
         for i in range(1, 21):
-            ing = meal.get(f"strIngredient{i}", "").lower()
+            ing = meal.get(f"strIngredient{i}", "")
+            if ing :
+                ing = ing.lower()
+            else :
+                continue
             if ing in top_ingredients:
                 score += 1
 
