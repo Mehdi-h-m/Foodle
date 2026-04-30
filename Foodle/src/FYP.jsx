@@ -41,7 +41,7 @@ export default function FYP() {
     setLoading(true);
     setError(false);
 
-    fetch(`https://foodle-back-end.onrender.com/meals/recommendation/?seed=${currentSeed}`, {
+    fetch(`https://foodle-back-end.onrender.com/meals/recommendations/?seed=${currentSeed}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
