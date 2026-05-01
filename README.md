@@ -1,12 +1,12 @@
 # Foodle
 
 A personalized recipe discovery app built with React. Foodle helps users explore thousands of meals from around the world, get personalized recommendations, and keep track of their favourite recipes.
-
+https://foodle-qmt4.onrender.com
 ---
 
 ## Tech Stack
 
-- **Frontend** — React (Vite)
+- **Frontend** — React (Vite)(`https://foodle-qmt4.onrender.com`)
 - **Styling** — Plain CSS with CSS variables
 - **Backend** — Django REST API hosted on Render (`https://foodle-back-end.onrender.com`)
 - **Data source** — TheMealDB API (via backend)
