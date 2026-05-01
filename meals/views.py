@@ -123,6 +123,8 @@ def get_meal_detail(request, meal_id):
 
     cached = cache.get(cache_key)
     if cached:
+        liked = Like.objects.filter(user=request.user, meal_id=meal_id).exists()
+        cached["liked"] = liked
         return Response(cached)
 
     with httpx.Client(timeout=10) as client:
@@ -144,7 +146,7 @@ def get_meal_detail(request, meal_id):
                 "name": ing,
                 "measure": measure
             })
-
+    liked = Like.objects.filter(user=request.user, meal_id=meal_id).exists()
     formatted = {
         "id": meal["idMeal"],
         "title": meal["strMeal"],
@@ -154,6 +156,7 @@ def get_meal_detail(request, meal_id):
         "image": meal.get("strMealThumb"),
         "youtube": meal.get("strYoutube"),
         "ingredients": ingredients,
+        "liked": liked
     }
 
     cache.set(cache_key, formatted, timeout=60 * 60 * 24)
