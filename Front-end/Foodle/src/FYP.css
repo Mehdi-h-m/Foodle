@@ -1,0 +1,107 @@
+.fyp-section {
+  background: var(--cream);
+  min-height: calc(100vh - 68px);
+  padding: 48px 0 100px;
+}
+
+.fyp-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0 10% 36px;
+}
+
+.fyp-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  color: var(--charcoal);
+  line-height: 1.05;
+}
+
+.fyp-title span { color: var(--rust); }
+
+.fyp-sub {
+  font-size: 14px;
+  color: rgba(30,28,24,.45);
+  margin-top: 6px;
+}
+
+.fyp-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 100px;
+  border: 1.5px solid rgba(0,0,0,.12);
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--charcoal);
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+  flex-shrink: 0;
+}
+
+.fyp-refresh:hover:not(:disabled) { background: var(--warm); }
+
+.fyp-refresh:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+.fyp-refresh svg {
+  width: 15px;
+  height: 15px;
+  transition: transform .5s ease;
+}
+
+.fyp-refresh.spinning svg {
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Grid */
+.fyp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+@media (max-width: 1100px) { .fyp-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 780px)  { .fyp-grid { grid-template-columns: repeat(2, 1fr); margin-left: 5%; margin-right: 5%; } .fyp-header { margin-left: 5%; margin-right: 5%; } }
+@media (max-width: 480px)  { .fyp-grid { grid-template-columns: 1fr; } }
+
+/* Exploration badge */
+.fyp-explore-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  background: var(--charcoal);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+}
+
+.fyp-status {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 0;
+  color: rgba(30,28,24,.35);
+  font-size: 15px;
+}
