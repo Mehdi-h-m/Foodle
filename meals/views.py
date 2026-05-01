@@ -25,7 +25,7 @@ def Discover(request):
         cutoff = timezone.now() - timedelta(days=3)
 
         attempts = 0
-        MAX_ATTEMPTS = 50 
+        MAX_ATTEMPTS = 500 
 
         while len(meals) < 20 and attempts < MAX_ATTEMPTS:
             attempts += 1
