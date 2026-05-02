@@ -1,0 +1,6 @@
+djangorestframework-simplejwt
+djangorestframework 
+requests
+django-cors-headers
+gunicorn
+httpx
