@@ -45,7 +45,7 @@ function fetchDiscover() {
       if (!res.ok) throw new Error();
       return res.json();
     })
-    .then(data => { setItems(data); setLoading(false); })
+    .then(data => { setItems(data.meals); setLoading(false); })
     .catch(() => { setError(true); setLoading(false); });
 }
 

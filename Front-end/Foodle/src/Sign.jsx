@@ -7,8 +7,10 @@ function SignUp({ Setpage }){
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
     const handleSubmit = async () => {
+      setError("");
   try {
     console.log("Here")
     const response = await fetch("https://foodle-back-end.onrender.com/users/register/", {
@@ -29,8 +31,14 @@ function SignUp({ Setpage }){
       login(data);
       Setpage("Home");
     } else {
-      console.error("Error:", data);
-    }
+  if (data.username) {
+    setError("Username already taken.");
+  } else if (data.email) {
+    setError("Invalid email address.");
+  } else {
+    setError(data.detail || data.message || "Something went wrong. Please try again.");
+  }
+}
   } catch (error) {
     console.error("Network error:", error);
   }
@@ -73,7 +81,9 @@ return(
         <label class="form-label">Password</label>
         <input class="form-input" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)}/>
       </div>
-
+      {error && (
+  <p style={{ color: "#C94F2C", fontSize: 13, marginBottom: 12 }}>{error}</p>
+)}
       <button class="form-submit" id="form-btn" onClick={handleSubmit}>Sign Up</button>
     </div>
   </div>
